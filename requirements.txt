@@ -1,0 +1,9 @@
+Django==1.11.6
+django-filter==1.0.4
+djangorestframework==3.7.0
+djangorestframework-jwt==1.11.0
+gunicorn==19.7.1
+Markdown==2.6.9
+PyJWT==1.5.3
+PyMySQL==0.7.11
+pytz==2017.2
