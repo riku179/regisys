@@ -1,5 +1,4 @@
-from rest_framework import viewsets, mixins, response, status, permissions, views
-from rest_framework.views import exceptions
+from rest_framework import viewsets, mixins, response, status, permissions
 from django.db.models.deletion import ProtectedError
 from .serializers import *
 from .models import *
