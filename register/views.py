@@ -1,4 +1,6 @@
-from rest_framework import viewsets, mixins, response, status, permissions
+from rest_framework import viewsets, mixins, response, status, permissions, views
+from rest_framework.views import exceptions
+from django.db.models.deletion import ProtectedError
 from .serializers import *
 from .models import *
 from .permissions import *
@@ -14,7 +16,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     itemのcreate/retrieve/update/deleteが可能
     itemのownerならupdate/deleteが可能
     他の人は閲覧のみ
-    deleteはそのitemのorderが発生していないときのみ可能
+    deleteはそのitemのorder存在していないときのみ可能
     """
     serializer_class = ItemSerializer
     queryset = Item.objects.all()
@@ -22,11 +24,12 @@ class ItemViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if not instance.orders:
-            return response.Response(status.HTTP_400_BAD_REQUEST)
-        else:
+        try:
             self.perform_destroy(instance)
-            return response.Response(status.HTTP_204_NO_CONTENT)
+        except ProtectedError:
+            return response.Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class OrderViewSet(mixins.CreateModelMixin,
