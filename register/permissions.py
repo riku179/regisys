@@ -2,7 +2,8 @@ from rest_framework import permissions
 
 __all__ = [
     'IsOwnerOrReadOnly',
-    'IsAdminOrReadOnly'
+    'IsAdminOrReadOnly',
+    'ItemPermission'
 ]
 
 
@@ -14,16 +15,29 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        import sys
-        print(f'{obj.owner.id} {request.user.id} {obj.owner == request.user}', file=sys.stderr)
-        return obj.owner == request.user
+        return obj.owner.id == request.user.id
+
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """
     管理者のみがWrite権限を持ち、他はReadOnlyなパーミッション
     """
-    def has_object_permission(self, request, view, obj):
+    def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return obj.user.is_staff
+        return request.user.is_staff
+
+
+class ItemPermission(IsOwnerOrReadOnly):
+    """
+    ownerのidは自分のidであることを保証
+    """
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.data.get('owner') and int(request.data.get('owner')) != request.user.id:
+            return False
+
+        return True

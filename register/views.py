@@ -18,7 +18,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     """
     serializer_class = ItemSerializer
     queryset = Item.objects.all()
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, ItemPermission]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
