@@ -3,6 +3,7 @@ from django.db.models.deletion import ProtectedError
 from .serializers import *
 from .models import *
 from .permissions import *
+from .filters import OrderFilter
 
 __all__ = [
     'ItemViewSet',
@@ -17,9 +18,15 @@ class ItemViewSet(viewsets.ModelViewSet):
     他の人は閲覧のみ
     deleteはそのitemのorder存在していないときのみ可能
     """
-    serializer_class = ItemSerializer
     queryset = Item.objects.all()
     permission_classes = [permissions.IsAuthenticated, ItemPermission]
+    filter_fields = ('owner',)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ReadItemSerializer
+        else:
+            return WriteItemSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -39,6 +46,12 @@ class OrderViewSet(mixins.CreateModelMixin,
     adminのみcreate可能
     他の人は閲覧のみ
     """
-    serializer_class = OrderSerializer
     queryset = Order.objects.all()
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]
+    filter_class = OrderFilter
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ReadOrderSerializer
+        else:
+            return WriteOrderSerializer
