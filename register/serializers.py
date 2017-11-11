@@ -45,6 +45,7 @@ class WriteItemSerializer(serializers.ModelSerializer):
             # userは編集禁止
             if field != 'user' or validated_data.get('user') is None:
                 setattr(instance, field, validated_data.get(field, getattr(instance, field)))
+        return instance
 
     class Meta:
         model = Item
