@@ -49,7 +49,7 @@ class OrderViewSet(mixins.CreateModelMixin,
     adminのみcreate可能
     他の人は閲覧のみ
     """
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().order_by('-created_at')
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]
     filter_class = OrderFilter
 
