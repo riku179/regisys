@@ -84,10 +84,11 @@ class OrderViewSet(mixins.CreateModelMixin,
         WHERE created_at BETWEEN %s AND %s \
         GROUP BY items.owner_id''', [dt_from, dt_to])
 
-        results = dict()
+        results = []
         for row in rows:
-            results[row.username] = int(row.sales)
-        import sys
-        print(results, file=sys.stderr)
+            dic = dict()
+            dic['username'] = row.username
+            dic['sales'] = int(row.sales)
+            results.append(dic)
 
         return response.Response(data=results)
