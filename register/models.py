@@ -20,9 +20,12 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        db_table = 'items'
+
 
 class Order(models.Model):
-    is_member_price = models.BooleanField('部員価格適用', default=False)
+    price = models.PositiveIntegerField('価格')
     quantity = models.PositiveIntegerField('数量')
     created_at = models.DateTimeField('決済日', auto_now_add=True)
 
@@ -30,3 +33,6 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.item.name} x{self.quantity}'
+
+    class Meta:
+        db_table = 'orders'
