@@ -16,9 +16,18 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'is_staff')
 
 
-class ReadOrderSerializer(serializers.ModelSerializer):
+class _ItemSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
+
     class Meta:
-        depth = 1
+        model = Item
+        fields = '__all__'
+
+
+class ReadOrderSerializer(serializers.ModelSerializer):
+    item = _ItemSerializer(read_only=True)
+
+    class Meta:
         model = Order
         fields = '__all__'
 
