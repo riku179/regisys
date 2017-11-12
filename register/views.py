@@ -36,7 +36,7 @@ class ItemViewSet(viewsets.ModelViewSet):
         try:
             self.perform_destroy(instance)
         except ProtectedError:
-            return response.Response(status=status.HTTP_400_BAD_REQUEST, data='この商品で既に会計がされています')
+            return response.Response(status=status.HTTP_400_BAD_REQUEST, data={'detail':'この商品で既に会計がされています'})
         else:
             return response.Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -70,11 +70,11 @@ class OrderViewSet(mixins.CreateModelMixin,
         dt_to = request.query_params.get('to')
 
         if dt_from is None or dt_to is None:
-            return response.Response(status=status.HTTP_400_BAD_REQUEST, data='期間を指定してください')
+            return response.Response(status=status.HTTP_400_BAD_REQUEST, data={'detail':'期間を指定してください'})
 
         if re.search(r'^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', dt_from) is None \
             or re.search(r'^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', dt_to) is None:
-            return response.Response(status=status.HTTP_400_BAD_REQUEST, data='データの形式が不正です')
+            return response.Response(status=status.HTTP_400_BAD_REQUEST, data={'detail':'データの形式が不正です'})
 
         rows = Order.objects.raw('''
         SELECT orders.id, auth_user.username, sum(orders.price * orders.quantity) AS 'sales' \
