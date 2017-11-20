@@ -72,8 +72,8 @@ class OrderViewSet(mixins.CreateModelMixin,
         if dt_from is None or dt_to is None:
             return response.Response(status=status.HTTP_400_BAD_REQUEST, data={'detail':'期間を指定してください'})
 
-        if re.search(r'^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', dt_from) is None \
-            or re.search(r'^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$', dt_to) is None:
+        if re.search(r'^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2} [0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$', dt_from) is None \
+            or re.search(r'^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2} [0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$', dt_to) is None:
             return response.Response(status=status.HTTP_400_BAD_REQUEST, data={'detail':'データの形式が不正です'})
 
         rows = Order.objects.raw('''
