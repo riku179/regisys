@@ -1,0 +1,40 @@
+version: "2" 
+services:
+  app:
+    image: riku179/regisys-server
+    command: prod
+    volumes:
+        - static_data:/usr/src/app/static:rw
+    ports:
+      - 8000:8000
+    links:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+
+  nginx:
+    image: riku179/regisys-nginx
+    ports:
+      - 0.0.0.0:4444:4444
+    volumes:
+      - static_data:/var/static:ro
+    links:
+      - app
+
+  db:
+    image: mariadb
+    volumes:
+      - 'data:/var/lib/mysql'
+    environment:
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=hogefuga
+      - MYSQL_ROOT_PASSWORD=hogefuga
+      - MYSQL_DATABASE=regisys
+   
+
+volumes:
+    static_data:
+        driver: local
+    data:
+        driver: local
