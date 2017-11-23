@@ -52,7 +52,7 @@ class WriteItemSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         for field in self.fields:
             # userは編集禁止
-            if field != 'user' or validated_data.get('user') is None:
+            if field != 'user':
                 setattr(instance, field, validated_data.get(field, getattr(instance, field)))
         return instance
 
