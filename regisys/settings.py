@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^y2)kf@h(x6_#z$uqj-b&pb!7a^5o7f-selxk6vf4=th)nru4s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG') or True
 
 ALLOWED_HOSTS = [
     '*'
@@ -145,6 +145,7 @@ REST_FRAMEWORK = {
 # DRF JWT
 import datetime
 from .jwt import jwt_response_payload_handler
+
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
     'JWT_RESPONSE_PAYLOAD_HANDLER': jwt_response_payload_handler
