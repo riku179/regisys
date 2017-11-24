@@ -4,6 +4,8 @@ services:
     app:
         build: .
         command: runserver 0.0.0.0:8000
+        volumes:
+            - '.:/usr/src/app'
         links:
             - db
         ports:
@@ -18,6 +20,7 @@ services:
             - 'data:/var/lib/mysql'
         ports:
             - '3306:3306'
+        command: '-C utf8'
         environment:
             - MYSQL_ALLOW_EMPTY_PASSWORD=yes
             - MYSQL_USER=admin
