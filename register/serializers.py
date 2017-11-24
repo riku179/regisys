@@ -51,9 +51,10 @@ class ReadItemSerializer(serializers.ModelSerializer):
 class WriteItemSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         for field in self.fields:
-            # userは編集禁止
-            if field != 'user':
+            # ownerは編集禁止
+            if field != 'owner':
                 setattr(instance, field, validated_data.get(field, getattr(instance, field)))
+        instance.save()
         return instance
 
     class Meta:
